@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: 'Lato', sans-serif;font-weight:700;" onload="check()">
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="margin-top: 5%;">
+            <span class="badge badge-primary p-2">RegisterPage</span>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-uppercase mt-2"><img src="./images/logo.png" class="mb-4" height=60 width=60 alt=""> CodingMart</h5>
+                    <hr>
+                    <form class="form" action="">
+                        <input id="name" type="text" placeholder="Username" class="form-control" required>
+                        <input id="number" type="text" placeholder="Mobile Number" class="form-control mt-4" required>
+                        <input id="email" type="email" placeholder="Email" class="form-control mt-4" required>
+                        <input id="password" type="password" placeholder="Password" class="form-control mt-4" required>
+                        <input id="cpassword" type="password" placeholder="Confirm Password" class="form-control mt-4" required>
+                        <small id="msg" class="alert alert-danger mt-4 text-center" style="display: none;"></small>
+                        <input type="button" onclick="register()" class="btn btn-primary mt-4 text-center" style="margin-left: 40%;margin-right: 40%;" value="Register">
+                    </form>
+                    <hr>    
+                    <div style="word-spacing: 5px;" class="text-center"><small> <i class="fa fa-arrow-left"></i> <a href="./index.html"> LoginPage</a></small></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    
+</body>
+<script>
+    function check(){
+        //console.log('hi');
+        if(sessionStorage['log']==1){
+            window.location.href="Success.html";
+        }
+        else{
+            sessionStorage.setItem('log',0);
+        }
+    }
+    function register(){
+        var uniq = 'id' + (new Date()).getTime();
+        var name=document.getElementById('name').value;
+        var number=document.getElementById('number').value;
+        var email=document.getElementById('email').value;
+        var password=document.getElementById('password').value;
+        var cpassword=document.getElementById('cpassword').value;
+        if(password.length>6 && cpassword.length>6){
+        if(password===cpassword){
+            len=window.localStorage.length;
+            var itr=0;
+            let flag=false;
+            if(len>0){
+            for (let i in window.localStorage){
+                    var d=JSON.parse(localStorage.getItem(i));
+                    for (let item of [d]){
+                        if(item.email==email || item.name==name){
+                            sessionStorage.setItem("error","username or password already present");
+                            flag=true;
+                            break;
+                        }
+                    }
+                    if(flag==true){
+                        break;
+                    }
+                    itr++;
+                    if(itr==len){
+                        break;
+                    }
+                }
+            }
+            if(flag==false){
+            var data={};
+            data['name']=name;
+            data['number']=number;
+            data['email']=email;
+            data['password']=password;
+            data['cpassword']=cpassword;
+            localStorage.setItem("users"+uniq ,JSON.stringify(data));
+             window.location.href="Success.html";
+             sessionStorage.setItem('log',1);
+             sessionStorage.setItem('name',name);
+            }
+            else{
+                location.reload();
+            }
+        }
+        else{
+            sessionStorage.setItem("error","password not same");
+            location.reload();
+        }
+        }
+        else{
+            sessionStorage.setItem("error","password length must be greater than 6");
+            location.reload();
+        }
+    }
+
+    if(sessionStorage['error']!=undefined){
+    if(sessionStorage['log']==1){
+        window.location.href="Success.html";
+    }
+    document.querySelector("#msg").innerHTML=sessionStorage['error'];
+    document.querySelector("#msg").style.display="block";
+    sessionStorage.clear();
+}
+else{
+    document.querySelector("#msg").style.display="none";
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</html>
